@@ -1,0 +1,14 @@
+T: Example\
+A: Rtificr\
+D: An example act\
+
+start: Where do you want to go? {
+	The store\store\
+	Home\home\
+	The park\park
+}
+store: You went to the store! {
+    start
+}
+home: You went home! {}
+park: You went to the park! {}

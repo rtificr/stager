@@ -20,7 +20,7 @@ impl ElementHolder {
         let pattern_content = Regex::new(r"(?<=:)(.*?)(?=\{)").map_err(|e| err_code("101", e))?;
         let pattern_body = Regex::new(r"(?<=\{).*").map_err(|e| err_code("102", e))?;
 
-        let mut name = pattern_name.find(&input)
+        let name = pattern_name.find(&input)
             .map_err(|e| err_code("110", e))?
             .map(|m| m.as_str().to_string())
             .ok_or_else(|| format!("Element #{element_index}: name not found"))?

@@ -98,7 +98,7 @@ fn process_act(act: String) -> Result<IndexMap<String, Element>, String> {
 
     for element_str in element_str_vec {
         if element_str == "" {continue};
-        let mut element_holder;
+        let element_holder;
         match ElementHolder::new(element_str.to_string(), index){
             Ok(elh) => element_holder = elh,
             Err(e) => {

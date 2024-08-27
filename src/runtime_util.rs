@@ -4,7 +4,7 @@ use crate::act::Act;
 use crate::error::err_code;
 
 //returns act in string form, absolute path or not
-pub fn get_act(mut path: String) -> Result<Act, String> {
+pub fn get_act(path: String) -> Result<Act, String> {
     let mut p = path;
     let pattern_file = Regex::new(r".*\.act").map_err(|e| err_code("200", e))?;
 

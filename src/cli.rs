@@ -3,7 +3,7 @@ use crate::run::run;
 use crate::show::show;
 
 pub fn start_cli() {
-    query();
+    let _ = query();
 }
 
 //stores command

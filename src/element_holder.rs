@@ -39,7 +39,7 @@ impl ElementHolder {
 
         if let Some(m) = body_match
         {
-            let mut choices_str: Vec<String> = m.as_str()
+            let choices_str: Vec<String> = m.as_str()
                 .split('\\')
                 .map(|s| s.trim().to_string())
                 .filter(|s| !s.is_empty())

@@ -39,7 +39,8 @@ pub fn run(args: Vec<String>) -> Result<(), String> {
             println!("  {}: {}", i + 1, choice.text);
         }
 
-        let mut choice_i: usize = 0;
+        let mut choice_i: usize;
+
         println!();
         println!("Pick a choice:");
 

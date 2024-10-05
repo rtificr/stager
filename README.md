@@ -1,7 +1,7 @@
 # Stager (STAGeR)
 Stager is a runtime environment that lets you interact with digital choose-your-own-adventure stories. 
 
-Stories are stored in a unique file format (.ACT, or just "act") for ease of use with Stager. ".ACT" is essentially a simple markup language that represents an interactive story. For info on how to create your own stories, see the wiki.
+Stories are stored in a unique file format (.ACT, or just "act") for ease of use with Stager. ".ACT" is essentially a simple markup language that represents an interactive story. For info on how to create your own stories, see the wiki. `//TODO: WIKI`
 
 ## Running
 Currently, all act files that work on [Stager Legacy](https://github.com/rtificr/stager-legacy) will work on the new version. Once the syntax has been sufficiently changed, an act versioning system may be added to differentiate the supported syntaxes.

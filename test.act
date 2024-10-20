@@ -1,0 +1,3 @@
+title: new test (ACT) {
+	(var = 1)Choice~dest(var = 2);
+}

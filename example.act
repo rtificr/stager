@@ -1,14 +1,15 @@
-T: Example\
-A: Rtificr\
-D: An example act\
+title: A NEW example ACT;
+author: Jay Churchill;
+description: This is an example ACT that demonstrates the basic structure of an ACT file.;
+date: 2020-01-01;
 
-start: Where do you want to go? {
-	The store\store\
-	Home\home\
-	The park\park
-}
-store: You went to the store! {
-    start
-}
-home: You went home! {}
-park: You went to the park! {}
+let name;
+
+start: What's your name? ~ confirmname (name = input());
+
+confirmname: So your name is "<name>"? {
+	(name != "") Yes ~ end;
+	No ~ start;
+};
+
+end: Goodbye, <name>!;

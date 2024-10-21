@@ -1,3 +1,9 @@
-title: new test (ACT) {
-	(var = 1)Choice~dest(var = 2);
+#t: Test ACT ~;
+#a: Jay Churchill ~;
+#d: This is a test of the ACT language ~;
+
+start: new test (ACT) {
+	1 ~;
+	2 ~ have fun!;
 }
+title2: this should go to the ~;

@@ -10,6 +10,6 @@ start: What's your name? ~ confirmname (name = input());
 confirmname: So your name is "<name>"? {
 	(name != "") Yes ~ end;
 	No ~ start;
-};
+}
 
 end: Goodbye, <name>!;

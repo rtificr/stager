@@ -4,6 +4,7 @@ mod process;
 mod cli;
 mod types;
 mod err;
+mod runtime;
 
 fn main() {
     let version = "3.0.0";

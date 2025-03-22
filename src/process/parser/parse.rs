@@ -1,5 +1,6 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use colored::Colorize;
+use crate::p_err;
 use crate::process::token::SemTok;
 use crate::types::{Choice, Element, ElementBody};
 
@@ -14,8 +15,8 @@ impl<'t> Parser<'t> {
             pos: 0,
         }
     }
-    pub fn parse(&mut self) -> Result<HashMap<String, Element>, String> {
-        let mut elements: HashMap<String, Element> = HashMap::new();
+    pub fn parse(&mut self) -> Result<BTreeMap<String, Element>, String> {
+        let mut elements: BTreeMap<String, Element> = BTreeMap::new();
         while let Some(SemTok::Title(title)) = self.peek().cloned() {
             let meta = title.starts_with('#');
             println!("Title found!");
@@ -36,6 +37,7 @@ impl<'t> Parser<'t> {
                     });
                 }
             }
+            println!("Parsing next element...");
             self.advance()
         }
         Ok(elements)
@@ -44,17 +46,14 @@ impl<'t> Parser<'t> {
     fn parse_body(&mut self) -> Result<ElementBody, String> {
         let mut body: ElementBody = ElementBody::Direct("#end".to_string());
         loop {
-            if self.peek().is_none() {
-                break;
-            }
-            println!("Checking at head...");
-            match self.peek().unwrap() {
-                SemTok::Dest(dest) => {
+            println!("Peeking...");
+            match self.peek() {
+                Some(SemTok::Dest(dest)) => {
                     body = ElementBody::Direct(dest.clone());
                     self.advance();
                     break;
                 }
-                SemTok::Choice(_) => {
+                Some(SemTok::Choice(_)) => {
                     println!("Choice found!");
                     let mut choices: Vec<Choice> = vec![];
                     while let Some(SemTok::Choice(choice)) = self.peek() {
@@ -88,17 +87,20 @@ impl<'t> Parser<'t> {
                     }
                     body = ElementBody::List(choices.clone());
                 }
-                SemTok::EOL => {
+                Some(SemTok::EOL) => {
                     println!("EOL found!");
-                    break
-                },
-                _ => return Err("Expected choice or destination".to_string())
+                    break;
+                }
+                _ => break,
             }
         }
         Ok(body)
     }
 
-    pub fn advance(&mut self) { self.pos += 1; self.display() }
+    pub fn advance(&mut self) {
+        self.pos += 1; 
+        self.display();
+    }
     pub fn next(&self) -> Option<&SemTok> { self.tokens.get(self.pos + 1) }
     pub fn peek(&self) -> Option<&SemTok> { self.tokens.get(self.pos) }
     pub fn last(&self) -> Option<&SemTok> { self.tokens.get(self.pos - 1) }
@@ -118,15 +120,15 @@ impl<'t> Parser<'t> {
 }
 
 //returns (condition, text)
-fn parse_choice(choice: String) -> (Option<String>, String) {
+fn parse_choice(choice: String) -> (Option<String>, Option<String>) {
     let begin = choice.find('(');
     let end = choice.rfind(')');
     if begin.is_some() && end.is_some() {
-        let cond = choice[begin.unwrap()+1..end.unwrap()].to_string();
-        let text = choice[end.unwrap()+1..].to_string();
-        (Some(cond.trim().to_string()), text.trim().to_string())
+        let cond = choice.get(begin.unwrap() + 1..end.unwrap());
+        let text = choice.get(end.unwrap() + 1..);
+        (cond.map(|s| s.trim().to_string()), text.map(|s| s.trim().to_string()))
     } else {
-        (None, choice.trim().to_string())
+        (None, if choice.is_empty() { None } else { Some(choice) })
     }
 }
 //returns (text, command)
@@ -134,7 +136,7 @@ fn parse_dest(choice: String) -> (String, Option<String>) {
     let begin = choice.find('(');
     let end = choice.rfind(')');
     if begin.is_some() && end.is_some() {
-        let cond = choice[begin.unwrap()+1..end.unwrap()].to_string();
+        let cond = choice[begin.unwrap() + 1..end.unwrap()].to_string();
         let text = choice[..begin.unwrap()].to_string();
         (text.trim().to_string(), Some(cond.trim().to_string()))
     } else {

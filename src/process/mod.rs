@@ -3,7 +3,7 @@ use std::io::Read;
 use crate::process::parser::parse::Parser;
 use crate::process::token::Token;
 use crate::process::tokenizer::tokenize;
-use crate::types::ElementBody;
+use crate::types::{Act, ElementBody};
 
 mod tokenizer;
 mod assembler;
@@ -11,19 +11,20 @@ mod token;
 mod semanticize;
 pub mod parser;
 
-pub fn parse_act(path: &str) -> Result<Vec<Token>, String> {
+pub fn parse_act(path: &str) -> Result<Act, String> {
     let mut act_file = File::open(path).map_err(|e| e.to_string())?;
     let mut act_str = String::new();
     act_file.read_to_string(&mut act_str).map_err(|e| e.to_string())?;
 
     let tokens = tokenize(act_str)?;
-    println!("{:?}", tokens);
+    //println!("{:?}", tokens);
     let semtoks = semanticize::semanticize(&tokens)?;
-    println!("{:?}", semtoks);
+    // println!("{:?}", semtoks);
     let mut parser = Parser::new(&semtoks);
     let act = parser.parse()?;
+    println!("{:#?}", act);
 
-    for (k, v) in act.iter() {
+    /*for (k, v) in act.iter() {
         println!("{}: {}", k, v.content);
         match &v.body.clone() {
             None => {}
@@ -40,7 +41,12 @@ pub fn parse_act(path: &str) -> Result<Vec<Token>, String> {
                 }
             }
         }
-    }
+    }*/
 
-    Ok(tokens)
+    Ok(Act {
+        title: act.get("#t").unwrap().content.clone(),
+        author: act.get("#a").unwrap().content.clone(),
+        description: act.get("#d").unwrap().content.clone(),
+        elements: act
+    })
 }

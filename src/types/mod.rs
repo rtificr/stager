@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone)]
 pub struct Act {
     pub title: String,
     pub author: String,
     pub description: String,
-    pub elements: HashMap<String, Element>
+    pub elements: BTreeMap<String, Element>
 }
 #[derive(Debug, Clone)]
 pub struct Element {
@@ -23,7 +23,7 @@ pub struct Choice {
     pub cond: Option<String>,
     //cmd will be executed only if choice is taken
     pub cmd: Option<String>,
-    
-    pub text: String,
+
+    pub text: Option<String>,
     pub dest: String,
 }

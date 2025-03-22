@@ -1,9 +1,10 @@
-#t: Test ACT ~;
-#a: Jay Churchill ~;
-#d: This is a test of the ACT language ~;
+#t: Title ~;
+#a: Author ~;
+#d: Description ~;
 
-start: new test (ACT) {
-	1 ~;
-	2 ~ have fun!;
+start: Hello! {
+	(var = 5 | var = 7) Continue ~;
+	Increment ~ start (var += 1)
 }
-title2: this should go to the ~;
+
+#end: Goodbye! ~;

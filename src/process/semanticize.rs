@@ -20,10 +20,15 @@ pub fn semanticize(tokens: &Vec<Token>) -> Result<Vec<SemTok>, String> {
             next = None;
         }
 
-        match ctx(last, cur, next)? {
-            Some(st) => semtoks.push(st),
+        
+        let r = match ctx(last, cur, next)? {
+            Some(st) => {
+                println!("Converting {last:?} {cur:?} {next:?} to {st:?} at token pos {i}...");
+                semtoks.push(st);
+            },
             None => (),
-        }
+        };
+        r
     }
 
     Ok(semtoks)
@@ -42,7 +47,7 @@ fn ctx(last: Option<&Token>, cur: Option<&Token>, next: Option<&Token>) -> Resul
                 matches! (next.clone(), Some(SymbTok(Tilde))) {
                 Ok(Some(Choice(t.clone())))
             } else if matches!(last.clone(), Some(SymbTok(Tilde))) &&
-                matches! (next.clone(), Some(SymbTok(SemiColon))) {
+                matches! (next.clone(), Some(SymbTok(SemiColon) | SymbTok(CloseBrace))) {
                 Ok(Some(Dest(t.clone())))
             } else if matches!(last.clone(), Some(SymbTok(OpenParen))) &&
                 matches! (next.clone(), Some(SymbTok(CloseParen))) {
@@ -51,7 +56,7 @@ fn ctx(last: Option<&Token>, cur: Option<&Token>, next: Option<&Token>) -> Resul
                 Ok(None)
             }
         }
-        Some(SymbTok(SemiColon)) => Ok(Some(EOL)),
+        Some(SymbTok(SemiColon | CloseBrace)) => Ok(Some(EOL)),
         _ => Ok(None),
     }
 }
